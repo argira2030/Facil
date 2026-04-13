@@ -5,26 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Protocolo de Atención – Lectura Fácil</title>
 <style>
-
 :root {
   --bg: #f5f0e8;
-  --bg2: #ede8de;
   --ink: #1a1714;
   --ink2: #2c3e50;
   --muted: #5a5a5a;
   --accent: #c0392b;
   --accent2: #2c3e50;
-  --gold: #b8860b;
   --border: #d5cfc4;
   --white: #fdfaf5;
-  --font-size-large: 1.2rem;
+  --font-size: 1.2rem;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: 'DM Sans', sans-serif;
-  font-size: var(--font-size-large);
+  font-family: 'Segoe UI', 'DM Sans', sans-serif;
+  font-size: var(--font-size);
   line-height: 1.5;
   padding: 1rem;
 }
@@ -62,7 +59,7 @@ p, li { margin-bottom: 1rem; font-size: 1.2rem; }
 }
 .step.checked { background: #e8f0f5; opacity: 0.8; }
 .step-check { font-weight: bold; display: inline-block; width: 28px; text-align: center; }
-.button, .btn-ghost {
+.button, .btn-print {
   display: inline-block;
   background: var(--accent);
   color: white;
@@ -75,8 +72,18 @@ p, li { margin-bottom: 1rem; font-size: 1.2rem; }
   font-size: 1rem;
   cursor: pointer;
 }
-.button:hover { background: var(--ink); }
 .button-light { background: var(--accent2); }
+.btn-listen {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: monospace;
+  margin-bottom: 1rem;
+}
+.btn-listen:hover { background: var(--accent2); color: white; }
 .question {
   background: #fef7e0;
   padding: 1rem;
@@ -91,7 +98,7 @@ p, li { margin-bottom: 1rem; font-size: 1.2rem; }
   border-radius: 40px;
   cursor: pointer;
 }
-.answer { display: none; background: #f9f2e0; padding: 1rem; margin-top: 1rem; border-left: 5px solid var(--gold); }
+.answer { display: none; background: #f9f2e0; padding: 1rem; margin-top: 1rem; border-left: 5px solid var(--gold, #b8860b); }
 .calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -105,6 +112,7 @@ p, li { margin-bottom: 1rem; font-size: 1.2rem; }
   padding: 0.5rem;
   cursor: pointer;
   border-radius: 8px;
+  font-size: 1rem;
 }
 .day.completed { background: var(--accent2); color: white; }
 .footer {
@@ -115,84 +123,154 @@ p, li { margin-bottom: 1rem; font-size: 1.2rem; }
   border-top: 1px solid var(--border);
   padding-top: 1rem;
 }
+@media print {
+  .btn-listen, .step, .button, .btn-print, .calendar .day, .option, nav, .progress-bar {
+    display: none;
+  }
+  .step.checked .step-check::after {
+    content: " ✓";
+  }
+  body { background: white; padding: 0; }
+  .container { box-shadow: none; padding: 0; }
+}
 </style>
 </head>
 <body>
 <div class="container">
-  <div style="text-align: right; margin-bottom: 1rem;">
-    <a href="https://argira.eus/protocolo-atencion/" style="font-family: monospace;">Volver</a> | 
-    <a href="https://argira.eus/easy_read/" style="font-family: monospace;">📖 English Easy Read</a>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <h1>📱 Protocolo de Atención <br> <small style="font-size: 1rem;">Versión Lectura Fácil</small></h1>
+    <button id="globalStopSpeechBtn" style="background:none; border:1px solid var(--accent); border-radius:20px; padding:0.2rem 0.8rem; display:none;">⏹️ Parar</button>
   </div>
-  <h1>📱 Protocolo de Atención <br> <small style="font-size: 1.2rem;">Versión Lectura Fácil</small></h1>
   <p>Este programa te ayuda a usar el móvil con más control. No necesitas fuerza de voluntad, solo sigue estos pasos.</p>
 
-  <!-- FASE 1 -->
+  <!-- ========== FASE 1 ========== -->
   <div class="phase">
     <h2>1. Cambia tu entorno</h2>
-    <div class="step" data-step="1.1" onclick="toggleStep(this)"><div><span class="step-check">⬜</span> <strong>Pon la pantalla en blanco y negro</strong></div><p>Los colores llaman tu atención sin que te des cuenta. En blanco y negro, el móvil aburre.</p></div>
-    <div class="step" data-step="1.2" onclick="toggleStep(this)"><div><span class="step-check">⬜</span> <strong>Quita las notificaciones que no sean de personas</strong></div><p>Las notificaciones roban tu atención. Deja solo llamadas y mensajes de gente real.</p></div>
-    <div class="step" data-step="1.3" onclick="toggleStep(this)"><div><span class="step-check">⬜</span> <strong>Deja el móvil fuera de la habitación cuando trabajes o duermas</strong></div><p>Ver el móvil aunque no lo toques ya cansa tu cerebro. Mejor tenerlo lejos.</p></div>
-    <div class="question"><p><strong>❓ ¿Por qué cansa ver el móvil aunque no lo uses?</strong></p>
+    <button class="btn-listen" data-section="fase1">🔊 Escuchar esta fase</button>
+    
+    <div class="step" data-step="1.1" onclick="toggleStep(this)">
+      <div><span class="step-check">⬜</span> <strong>Apaga las notificaciones que no sean de personas</strong></div>
+      <p>Las notificaciones te roban la atención. Deja solo las llamadas y mensajes de gente real.</p>
+    </div>
+    <div class="step" data-step="1.2" onclick="toggleStep(this)">
+      <div><span class="step-check">⬜</span> <strong>Deja el móvil fuera de la habitación cuando trabajes o duermas</strong></div>
+      <p>Ver el móvil aunque no lo toques ya cansa tu cerebro. Mejor tenerlo lejos.</p>
+    </div>
+    <div class="step" data-step="1.3" onclick="toggleStep(this)">
+      <div><span class="step-check">⬜</span> <strong>Reduce los colores de la pantalla</strong></div>
+      <p>Los colores brillantes llaman tu atención sin que quieras. Prueba estas opciones:<br>
+      - Baja el brillo al mínimo.<br>
+      - Activa el "modo lectura" o "modo noche".<br>
+      - Si tu móvil lo permite, pon la pantalla en blanco y negro (Ajustes → Accesibilidad).</p>
+    </div>
+
+    <div class="question">
+      <p><strong>❓ ¿Por qué cansa ver el móvil aunque no lo uses?</strong></p>
       <div class="option" onclick="showAnswer(this, 'ans1')">Porque me da ansiedad</div>
       <div class="option" onclick="showAnswer(this, 'ans1', true)">Porque mi cerebro gasta energía en ignorarlo</div>
-      <div id="ans1" class="answer">✅ Correcto. Tu cerebro usa recursos para no mirar el móvil, aunque no quieras. Por eso te sientes cansado.</div>
+      <div id="ans1" class="answer">✅ Correcto. Tu cerebro usa recursos para no mirar el móvil. Por eso te sientes cansado.</div>
     </div>
   </div>
 
-  <!-- FASE 2 -->
+  <!-- ========== FASE 2 ========== -->
   <div class="phase">
     <h2>2. Ayuda a tu cerebro a recuperarse</h2>
-    <div class="step" data-step="2.1" onclick="toggleStep(this)"><div><span class="step-check">⬜</span> <strong>Deja de hacer scroll sin parar</strong></div><p>Los vídeos cortos y las noticias sin fin son como caramelos para tu cerebro. Cámbialos por leer un libro o caminar sin música.</p></div>
-    <div class="step" data-step="2.2" onclick="toggleStep(this)"><div><span class="step-check">⬜</span> <strong>Permítete aburrirte</strong></div><p>El aburrimiento es normal. No lo tapes con el móvil. Aguanta unos minutos.</p></div>
-    <div class="step" data-step="2.3" onclick="toggleStep(this)"><div><span class="step-check">⬜</span> <strong>Mira el sol nada más levantarte</strong></div><p>La luz natural regula tu sueño y tu ánimo. Antes de mirar el móvil, asómate a la ventana 5 minutos.</p></div>
-    <div class="question"><p><strong>❓ ¿Qué significa sentir un vacío cuando dejo de hacer scroll?</strong></p>
+    <button class="btn-listen" data-section="fase2">🔊 Escuchar esta fase</button>
+    
+    <div class="step" data-step="2.1" onclick="toggleStep(this)">
+      <div><span class="step-check">⬜</span> <strong>Deja de hacer scroll sin parar</strong></div>
+      <p>Los vídeos cortos y las noticias sin fin son como caramelos para tu cerebro. Cámbialos por leer un libro o caminar sin música.</p>
+    </div>
+    <div class="step" data-step="2.2" onclick="toggleStep(this)">
+      <div><span class="step-check">⬜</span> <strong>Permítete aburrirte</strong></div>
+      <p>El aburrimiento es normal. No lo tapes con el móvil. Mira por la ventana o cuenta hasta 50.</p>
+    </div>
+    <div class="step" data-step="2.3" onclick="toggleStep(this)">
+      <div><span class="step-check">⬜</span> <strong>Mira el sol nada más levantarte</strong></div>
+      <p>La luz natural regula tu sueño y tu ánimo. Antes de mirar el móvil, asómate a la ventana 5 minutos.</p>
+    </div>
+
+    <div class="question">
+      <p><strong>❓ ¿Qué significa sentir vacío cuando dejo de hacer scroll?</strong></p>
       <div class="option" onclick="showAnswer(this, 'ans2')">Que soy adicto</div>
       <div class="option" onclick="showAnswer(this, 'ans2', true)">Que mi cerebro se está regulando</div>
       <div id="ans2" class="answer">✅ Esa sensación es buena. Significa que tu cerebro está recuperando su equilibrio. Desaparece a los pocos días.</div>
     </div>
   </div>
 
-  <!-- FASE 3 -->
+  <!-- ========== FASE 3 ========== -->
   <div class="phase">
     <h2>3. El poder de la pausa</h2>
-    <div class="step" data-step="3.1" onclick="toggleStep(this)"><div><span class="step-check">⬜</span> <strong>Paso 1: Date cuenta</strong></div><p>Observa que has abierto la app sin pensar. No te enfades. Solo di: "Esto ha sido automático".</p></div>
-    <div class="step" data-step="3.2" onclick="toggleStep(this)"><div><span class="step-check">⬜</span> <strong>Paso 2: Espera 5 segundos</strong></div><p>Mantén la app abierta pero no toques nada. Cuenta 5 segundos. Esto le da tiempo a tu cerebro para frenar.</p></div>
-    <div class="step" data-step="3.3" onclick="toggleStep(this)"><div><span class="step-check">⬜</span> <strong>Paso 3: Decide</strong></div><p>¿Realmente necesitas entrar o era solo costumbre? Si era costumbre, cierra la app. Si es útil, sigue con intención.</p></div>
-    <div class="question"><p><strong>❓ ¿Por qué es malo sentirse culpable?</strong></p>
+    <button class="btn-listen" data-section="fase3">🔊 Escuchar esta fase</button>
+    
+    <div class="step" data-step="3.1" onclick="toggleStep(this)">
+      <div><span class="step-check">⬜</span> <strong>Paso 1: Date cuenta</strong></div>
+      <p>Observa que has abierto la app sin pensar. No te enfades. Solo di: "Esto ha sido automático".</p>
+    </div>
+    <div class="step" data-step="3.2" onclick="toggleStep(this)">
+      <div><span class="step-check">⬜</span> <strong>Paso 2: Espera 5 segundos</strong></div>
+      <p>Mantén la app abierta pero no toques nada. Cuenta 5 segundos. Esto le da tiempo a tu cerebro para frenar.</p>
+    </div>
+    <div class="step" data-step="3.3" onclick="toggleStep(this)">
+      <div><span class="step-check">⬜</span> <strong>Paso 3: Decide</strong></div>
+      <p>¿Realmente necesitas entrar o era solo costumbre? Si era costumbre, cierra la app. Si es útil, sigue con intención.</p>
+    </div>
+
+    <div class="question">
+      <p><strong>❓ ¿Por qué es malo sentirse culpable?</strong></p>
       <div class="option" onclick="showAnswer(this, 'ans3')">Porque la culpa no sirve de nada</div>
       <div class="option" onclick="showAnswer(this, 'ans3', true)">Porque la culpa gasta la misma energía que necesitas para controlarte</div>
       <div id="ans3" class="answer">✅ Así es. Si te enfadas contigo mismo, te quedas sin fuerzas para la próxima vez. Mejor observa sin juzgar.</div>
     </div>
   </div>
 
-  <!-- FASE 4 -->
+  <!-- ========== FASE 4 ========== -->
   <div class="phase">
     <h2>4. Usa el móvil como una herramienta</h2>
-    <div class="step" data-step="4.1" onclick="toggleStep(this)"><div><span class="step-check">⬜</span> <strong>Antes de tocar el móvil, di en voz alta lo que vas a hacer</strong></div><p>Por ejemplo: "Voy a mirar el tiempo y luego cerrar". Esto activa tu cerebro consciente.</p></div>
-    <div class="step" data-step="4.2" onclick="toggleStep(this)"><div><span class="step-check">⬜</span> <strong>Trata el móvil como un martillo</strong></div><p>Un martillo lo coges para clavar un clavo y lo dejas. No te quedas viviendo con el martillo. Haz lo mismo con el móvil.</p></div>
-    <div class="step" data-step="4.3" onclick="toggleStep(this)"><div><span class="step-check">⬜</span> <strong>Cuando termines, di "completado"</strong></div><p>Ese pequeño ritual refuerza el hábito de usar el móvil con un propósito y luego soltarlo.</p></div>
-    <div class="question"><p><strong>❓ ¿Cuál es la diferencia entre usar el móvil como herramienta o como vivienda?</strong></p>
+    <button class="btn-listen" data-section="fase4">🔊 Escuchar esta fase</button>
+    
+    <div class="step" data-step="4.1" onclick="toggleStep(this)">
+      <div><span class="step-check">⬜</span> <strong>Antes de tocar el móvil, di en voz alta lo que vas a hacer</strong></div>
+      <p>Por ejemplo: "Voy a mirar el tiempo y luego cerrar". Esto activa tu cerebro consciente.</p>
+    </div>
+    <div class="step" data-step="4.2" onclick="toggleStep(this)">
+      <div><span class="step-check">⬜</span> <strong>Trata el móvil como un martillo</strong></div>
+      <p>Un martillo lo coges para clavar un clavo y lo dejas. No te quedas viviendo con el martillo. Haz lo mismo con el móvil.</p>
+    </div>
+    <div class="step" data-step="4.3" onclick="toggleStep(this)">
+      <div><span class="step-check">⬜</span> <strong>Cuando termines, di "completado"</strong></div>
+      <p>Ese pequeño ritual refuerza el hábito de usar el móvil con un propósito y luego soltarlo.</p>
+    </div>
+
+    <div class="question">
+      <p><strong>❓ ¿Cuál es la diferencia entre usar el móvil como herramienta o como vivienda?</strong></p>
       <div class="option" onclick="showAnswer(this, 'ans4')">El tiempo que pasas</div>
       <div class="option" onclick="showAnswer(this, 'ans4', true)">La intención con la que lo coges</div>
       <div id="ans4" class="answer">✅ Exacto. Si sabes lo que vas a hacer, es herramienta. Si entras sin plan, te quedas atrapado.</div>
     </div>
   </div>
 
-  <!-- CALENDARIO -->
+  <!-- ========== CALENDARIO ========== -->
   <div class="phase">
     <h2>📅 Calendario de 30 días</h2>
+    <button class="btn-listen" data-section="calendario">🔊 Escuchar esta sección</button>
     <div class="calendar" id="calendar"></div>
-    <p><strong>Días importantes:</strong> Día 7: empiezas a notar cambios; Día 14: el vacío disminuye; Día 30: tu cerebro ya no necesita el móvil para sentirse bien.</p>
+    <p><strong>Días importantes:</strong><br>
+    ✅ Día 7: empiezas a notar cambios.<br>
+    ✅ Día 14: el vacío disminuye.<br>
+    ✅ Día 30: tu cerebro ya no necesita el móvil para sentirse bien.</p>
     <button class="button button-light" onclick="resetCalendar()">Reiniciar calendario</button>
+    <button class="btn-print" onclick="window.print();">🖨️ Imprimir / Guardar PDF</button>
   </div>
 
   <div class="footer">
-    <p>© 2026 Jose Ranero García · CC BY 4.0 · DOI: 10.5281/zenodo.19556754</p>
-    <p>Versión Lectura Fácil del <a href="https://argira.eus/protocolo-atencion/">Protocolo de Atención</a></p>
+    <p>© 2026 Jose Ranero García · CC BY 4.0 · DOI: 10.5281/zenodo.19558671</p>
+    <p><a href="attention_protocol.html">Versión estándar en español</a> | <a href="index.html">English standard</a> | <a href="easy_read.html">Easy Read English</a></p>
   </div>
 </div>
 
 <script>
+// ========== PASOS ==========
 function toggleStep(stepDiv) {
   const checkSpan = stepDiv.querySelector('.step-check');
   if (stepDiv.classList.contains('checked')) {
@@ -204,16 +282,116 @@ function toggleStep(stepDiv) {
   }
   saveSteps();
 }
-function saveSteps() { localStorage.setItem('facil_steps', JSON.stringify([...document.querySelectorAll('.step')].map(s => s.classList.contains('checked')))); }
-function loadSteps() { const saved = localStorage.getItem('facil_steps'); if(saved) JSON.parse(saved).forEach((val,i)=>{ if(val) document.querySelectorAll('.step')[i]?.classList.add('checked'); document.querySelectorAll('.step')[i]?.querySelector('.step-check') && val && (document.querySelectorAll('.step')[i].querySelector('.step-check').innerHTML='✅'); }); }
-function showAnswer(button, answerId, isCorrect=false) { const answerDiv = document.getElementById(answerId); button.style.backgroundColor = isCorrect ? '#d4edda' : '#f8d7da'; answerDiv.style.display = 'block'; button.parentElement.querySelectorAll('.option').forEach(btn => btn.style.pointerEvents = 'none'); }
+function saveSteps() {
+  const steps = [];
+  document.querySelectorAll('.step').forEach(s => steps.push(s.classList.contains('checked')));
+  localStorage.setItem('facil_steps', JSON.stringify(steps));
+}
+function loadSteps() {
+  const saved = localStorage.getItem('facil_steps');
+  if (saved) {
+    const steps = JSON.parse(saved);
+    document.querySelectorAll('.step').forEach((s, i) => {
+      if (steps[i]) {
+        s.classList.add('checked');
+        s.querySelector('.step-check').innerHTML = '✅';
+      }
+    });
+  }
+}
+
+// ========== PREGUNTAS ==========
+function showAnswer(button, answerId, isCorrect=false) {
+  const answerDiv = document.getElementById(answerId);
+  button.style.backgroundColor = isCorrect ? '#d4edda' : '#f8d7da';
+  answerDiv.style.display = 'block';
+  button.parentElement.querySelectorAll('.option').forEach(btn => btn.style.pointerEvents = 'none');
+}
+
+// ========== CALENDARIO ==========
 let completedDays = [];
-function loadDays() { const saved = localStorage.getItem('facil_days'); completedDays = saved ? JSON.parse(saved) : []; updateCalendar(); }
+function loadDays() {
+  const saved = localStorage.getItem('facil_days');
+  completedDays = saved ? JSON.parse(saved) : [];
+  updateCalendar();
+}
 function saveDays() { localStorage.setItem('facil_days', JSON.stringify(completedDays)); }
-function toggleDay(day) { const idx = completedDays.indexOf(day); idx === -1 ? completedDays.push(day) : completedDays.splice(idx,1); saveDays(); updateCalendar(); }
-function updateCalendar() { const grid = document.getElementById('calendar'); grid.innerHTML = ''; for(let i=1;i<=30;i++){ const dayDiv = document.createElement('div'); dayDiv.classList.add('day'); if(completedDays.includes(i)) dayDiv.classList.add('completed'); dayDiv.textContent = i; dayDiv.onclick = (function(d){ return function(){ toggleDay(d); }; })(i); grid.appendChild(dayDiv); } }
-function resetCalendar() { if(confirm('¿Borrar todos los días marcados?')) { completedDays = []; saveDays(); updateCalendar(); } }
-loadSteps(); loadDays();
+function toggleDay(day) {
+  const idx = completedDays.indexOf(day);
+  idx === -1 ? completedDays.push(day) : completedDays.splice(idx,1);
+  saveDays();
+  updateCalendar();
+}
+function updateCalendar() {
+  const grid = document.getElementById('calendar');
+  grid.innerHTML = '';
+  for (let i=1; i<=30; i++) {
+    const dayDiv = document.createElement('div');
+    dayDiv.classList.add('day');
+    if (completedDays.includes(i)) dayDiv.classList.add('completed');
+    dayDiv.textContent = i;
+    dayDiv.onclick = (function(d) { return function() { toggleDay(d); }; })(i);
+    grid.appendChild(dayDiv);
+  }
+}
+function resetCalendar() {
+  if (confirm('¿Borrar todos los días marcados?')) {
+    completedDays = [];
+    saveDays();
+    updateCalendar();
+  }
+}
+
+// ========== LECTOR DE VOZ ==========
+let currentUtterance = null;
+function stopSpeech() {
+  if (window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+    currentUtterance = null;
+    const stopBtn = document.getElementById('globalStopSpeechBtn');
+    if (stopBtn) stopBtn.style.display = 'none';
+  }
+}
+function speakText(text, lang = 'es-ES') {
+  if (!window.speechSynthesis) { alert('Tu navegador no soporta voz.'); return; }
+  stopSpeech();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = lang;
+  utterance.rate = 0.9;
+  currentUtterance = utterance;
+  utterance.onend = () => {
+    currentUtterance = null;
+    const stopBtn = document.getElementById('globalStopSpeechBtn');
+    if (stopBtn) stopBtn.style.display = 'none';
+  };
+  window.speechSynthesis.speak(utterance);
+  const stopBtn = document.getElementById('globalStopSpeechBtn');
+  if (stopBtn) stopBtn.style.display = 'inline-block';
+}
+function getPhaseText(phaseId) {
+  let element = document.querySelector(`.phase:has(h2:contains('${phaseId}'))`);
+  if (!element) return '';
+  const clone = element.cloneNode(true);
+  clone.querySelectorAll('.btn-listen, .step, .option, .button').forEach(el => el.remove());
+  return clone.innerText.trim();
+}
+// Helper para selector de fase por texto (simplificado)
+document.querySelectorAll('.btn-listen').forEach(btn => {
+  btn.addEventListener('click', () => {
+    let parent = btn.closest('.phase');
+    if (!parent && btn.getAttribute('data-section') === 'calendario') parent = document.querySelector('.phase:last-child');
+    if (parent) {
+      const clone = parent.cloneNode(true);
+      clone.querySelectorAll('.btn-listen, .step, .option, .button, .calendar .day').forEach(el => el.remove());
+      let text = clone.innerText.trim();
+      if (text) speakText(text);
+    }
+  });
+});
+document.getElementById('globalStopSpeechBtn')?.addEventListener('click', stopSpeech);
+
+loadSteps();
+loadDays();
 </script>
 </body>
 </html>
